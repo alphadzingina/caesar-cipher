@@ -1,34 +1,37 @@
-alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
 from art import logo
-print(logo)
 
-#TODO-1: Combine the encrypt() and decrypt() functions into a single function called caesar(). 
+alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
 
-def caesar(start_text, shift_amount, cipher_direction):
+def caesar(start_text, shift_amount, direction):
   end_text = ""
-  if cipher_direction == "decode":
+  if direction == "decode":
     shift_amount *= -1
   for char in start_text:
-    if char in alphabet:
+    if char not in alphabet:
+      new_char = char
+    else:
       position = alphabet.index(char)
       new_position = position + shift_amount
-      end_text += alphabet[new_position]
-    else:
-      end_text += char
-  print(f"Here's the {direction}d result: {end_text}")
+      if new_position > len(alphabet) - 1:
+        new_position -= len(alphabet)
+      elif new_position < 0:
+        new_position += len(alphabet)
+      new_char = alphabet[new_position]
+    end_text += new_char
 
-should_end = False
-while not should_end:
+  print(f"Here's the {direction}d result: {end_text}")
+  restart = input("Type 'yes' if you want to go again. Otherwise type 'no'.\n")
+  if restart == "yes":
+    cipher_program()
+  else:
+    print("Goodbye")
+
+def cipher_program():
   direction = input("Type 'encode' to encrypt, type 'decode' to decrypt:\n")
   text = input("Type your message:\n").lower()
   shift = int(input("Type the shift number:\n"))
-  shift = shift % 26
+  shift = shift % len(alphabet)
+  caesar(text, shift, direction)
 
-  caesar(start_text=text, shift_amount=shift, cipher_direction=direction)
-
-  restart = input("Type 'yes' if you want to go again. Otherwise type 'no'.\n")
-  if restart == "no":
-    should_end = True
-    print("Goodbye")
-
-caesar(start_text=text, shift_amount=shift, cipher_direction=direction)
+print(logo)
+cipher_program()
